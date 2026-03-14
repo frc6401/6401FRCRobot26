@@ -50,7 +50,7 @@ public class RobotContainer {
 
     private final SwerveTelemetry swerveTelemetry = new SwerveTelemetry(Driving.kMaxSpeed.in(MetersPerSecond));
     
-    private final XboxController Driver = new XboxController(0);
+    private final CommandXboxController Driver = new CommandXboxController(0);
     private final CommandJoystick Buttons = new CommandJoystick(1);
     
      private final AutoRoutines autoRoutines = new AutoRoutines(
@@ -71,8 +71,9 @@ public class RobotContainer {
         shooter,
         hood,
         hanger,
-        () -> -Driver.getLeftY(), 
-        () -> -Driver.getLeftX()
+        () -> -0.5 * Driver.getLeftY(), 
+        () -> -0.5 * Driver.getLeftX()
+        //driving speed pt1 (for drive team)
     );
     
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -98,28 +99,35 @@ public class RobotContainer {
         RobotModeTriggers.autonomous().or(RobotModeTriggers.teleop())
             .onTrue(intake.homingCommand())
             .onTrue(hanger.homingCommand());
+        
+        Driver.button(10).whileTrue(subsystemCommands.aimAndShoot());
+        //Buttons.button(10).whileTrue(subsystemCommands.shootManually());
+        Driver.button(1).whileTrue(intake.intakeCommand());
+        Driver.button(2).onTrue(intake.runOnce(() -> intake.set(Intake.Position.STOWED)));
+        
+        //Working Solution
+        while (Driver.getLeftTriggerAxis() > 0)
+        {
+            subsystemCommands.shootManually();
+        }
 
-        Buttons.button(9).whileTrue(subsystemCommands.aimAndShoot());
-        Buttons.button(10).whileTrue(subsystemCommands.shootManually());
-        Buttons.button(11).whileTrue(intake.intakeCommand());
-        Buttons.button(12).onTrue(intake.runOnce(() -> intake.set(Intake.Position.STOWED)));
-
-        Buttons.povUp().onTrue(hanger.positionCommand(Hanger.Position.HANGING));
-        Buttons.povDown().onTrue(hanger.positionCommand(Hanger.Position.HUNG));
+        Driver.button(5).onTrue(hanger.positionCommand(Hanger.Position.HANGING));
+        Driver.button(6).onTrue(hanger.positionCommand(Hanger.Position.HUNG));
     }
 
     private void configureManualDriveBindings() {
         final ManualDriveCommand manualDriveCommand = new ManualDriveCommand(
             swerve, 
-            () -> -Driver.getLeftY(), 
-            () -> -Driver.getLeftX(),
-            () -> -Driver.getRightX()
+            () -> -0.5 * Driver.getLeftY(), 
+            () -> -0.5 * Driver.getLeftX(),
+            () -> -0.5 * Driver.getRightX()
+            // driving speed pt2
         );
         swerve.setDefaultCommand(manualDriveCommand);
-        Buttons.button(5).onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.k180deg)));
-        Buttons.button(6).onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.kCW_90deg)));
-        Buttons.button(7).onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.kCCW_90deg)));
-       Buttons.button(8).onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.kZero)));
+        Driver.povDown().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.k180deg)));
+        Driver.povRight().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.kCW_90deg)));
+        Driver.povLeft().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.kCCW_90deg)));
+       Driver.povUp().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.kZero)));
        
         Buttons.button(13).onTrue(Commands.runOnce(() -> manualDriveCommand.seedFieldCentric()));   
     }
