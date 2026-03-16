@@ -106,7 +106,7 @@ public class RobotContainer {
         Driver.button(2).onTrue(intake.runOnce(() -> intake.set(Intake.Position.STOWED)));
         
         //Working Solution
-        while (Driver.getLeftTriggerAxis() > 0)
+        while (Driver.getLeftTriggerAxis() > 0.5)
         {
             subsystemCommands.shootManually();
         }
