@@ -24,7 +24,7 @@ import frc.robot.Constants.KrakenX60;
 import frc.robot.Ports;
 
 public class Feeder extends SubsystemBase {
-    public enum Speed {
+    /*public enum Speed {
         FEED(5000);
 
         private final double rpm;
@@ -43,7 +43,7 @@ public class Feeder extends SubsystemBase {
     private final VoltageOut voltageRequest = new VoltageOut(0);
 
     public Feeder() {
-        motor = new TalonFX(Ports.kFeeder, Ports.kRoboRioCANBus);
+       /* motor = new TalonFX(Ports.kFeeder, Ports.kCANivoreCANBus);
 
         final TalonFXConfiguration config = new TalonFXConfiguration()
             .withMotorOutput(
@@ -94,5 +94,9 @@ public class Feeder extends SubsystemBase {
         builder.addDoubleProperty("RPM", () -> motor.getVelocity().getValue().in(RPM), null);
         builder.addDoubleProperty("Stator Current", () -> motor.getStatorCurrent().getValue().in(Amps), null);
         builder.addDoubleProperty("Supply Current", () -> motor.getSupplyCurrent().getValue().in(Amps), null);
-    }
+    
+        }
+        
+}
+     */   
 }
