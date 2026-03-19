@@ -33,7 +33,7 @@ import frc.robot.Constants.KrakenX60;
 import frc.robot.Ports;
 
 public class Hanger extends SubsystemBase {
-    public enum Position {
+   /*  public enum Position {
         HOMED(0),
         EXTEND_HOPPER(2),
         HANGING(6),
@@ -58,13 +58,14 @@ public class Hanger extends SubsystemBase {
     private final TalonFX motor;
     private final TalonFX motor2;
     private final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0).withSlot(0);
+    private final MotionMagicVoltage motionMagicRequest2 = new MotionMagicVoltage(0).withSlot(0);
     private final VoltageOut voltageRequest = new VoltageOut(0);
 
-    private boolean isHomed = false;
+    private boolean isHomed = true; //set to true to stop the homing for now
 
     public Hanger() {
-        motor = new TalonFX(Ports.kHanger, Ports.kRoboRioCANBus);
-        motor2 = new TalonFX(Ports.kHanger2, Ports.kRoboRioCANBus);
+        motor = new TalonFX(Ports.kHanger, Ports.kCANivoreCANBus);
+        motor2 = new TalonFX(Ports.kHanger2, Ports.kCANivoreCANBus);
         final TalonFXConfiguration config = new TalonFXConfiguration()
             .withMotorOutput(
                 new MotorOutputConfigs()
@@ -128,7 +129,7 @@ public class Hanger extends SubsystemBase {
                 .withPosition(position.motorAngle())
         );
         motor2.setControl(
-            motionMagicRequest
+            motionMagicRequest2
                 .withPosition(position.motorAngle())
         );
     }
@@ -151,6 +152,12 @@ public class Hanger extends SubsystemBase {
             
     }
 
+    public Command positionCommand2(Position position2) {
+        return runOnce(() -> set(position2))  
+            .andThen(Commands.waitUntil(this::isExtensionWithinTolerance2));
+    }
+
+
     public Command homingCommand() {
         return Commands.sequence(
             runOnce(() -> setPercentOutput(-0.05)),
@@ -171,7 +178,7 @@ public class Hanger extends SubsystemBase {
             runOnce(() -> setPercentOutput(-0.05)),
             Commands.waitUntil(() -> motor2.getSupplyCurrent().getValue().in(Amps) > 0.4),
             runOnce(() -> {
-                motor.setPosition(Position.HOMED.motorAngle());
+                motor2.setPosition(Position.HOMED.motorAngle());
                 isHomed = true;
                 set(Position.EXTEND_HOPPER);
                  
@@ -196,7 +203,7 @@ public class Hanger extends SubsystemBase {
     // test solution
     private boolean isExtensionWithinTolerance2(){
         final Distance currentExtension2 = motorAngleToExtension(motor2.getPosition().getValue());
-        final Distance targetExtension2 = motorAngleToExtension(motionMagicRequest.getPositionMeasure());
+        final Distance targetExtension2 = motorAngleToExtension(motionMagicRequest2.getPositionMeasure());
         return currentExtension2.isNear(targetExtension2, kExtensionTolerance2);
     }
 
@@ -206,7 +213,7 @@ public class Hanger extends SubsystemBase {
         return Inches.of(extensionMeasure.in(Inches)); // Promote from DistanceUnit to Distance
     }
 
-    // test solution 
+    // test solution
     private Distance motorAngletoExtension2(Angle motorAngle2) {
         final Measure<DistanceUnit> extensionMeasure2 = motorAngle2.timesRatio(kHangerExtensionPerMotorAngle);
         return Inches.of(extensionMeasure2.in(Inches)); 
@@ -217,5 +224,10 @@ public class Hanger extends SubsystemBase {
         builder.addStringProperty("Command", () -> getCurrentCommand() != null ? getCurrentCommand().getName() : "null", null);
         builder.addDoubleProperty("Extension (inches)", () -> motorAngleToExtension(motor.getPosition().getValue()).in(Inches), null);
         builder.addDoubleProperty("Supply Current", () -> motor.getSupplyCurrent().getValue().in(Amps), null);
+        builder.addDoubleProperty("Extension2 (inches)", () -> motorAngletoExtension2(motor.getPosition().getValue()).in(Inches), null);
+        builder.addDoubleProperty("Supply Current2", () -> motor2.getSupplyCurrent().getValue().in(Amps), null);    
     }
+   
+    */
 }
+ 

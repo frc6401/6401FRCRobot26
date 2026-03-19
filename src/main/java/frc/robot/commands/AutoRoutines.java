@@ -2,6 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
+
 package frc.robot.commands;
 
 import static frc.robot.generated.ChoreoTraj.OutpostAndDepotTrajectory$0;
@@ -26,7 +27,7 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 
  public final class AutoRoutines {
-    private final Swerve swerve;
+   /*  private final Swerve swerve;
     private final Intake intake;
     private final Floor floor;
     private final Feeder feeder;
@@ -122,5 +123,6 @@ import frc.robot.subsystems.Swerve;
 
 
 
-
+ */
  }
+    

@@ -68,8 +68,9 @@ public final class SubsystemCommands {
             () -> 0
         );
     }
+}
 
-    public Command aimAndShoot() {
+   /*  public Command aimAndShoot() {
         final AimAndDriveCommand aimAndDriveCommand = new AimAndDriveCommand(swerve, forwardInput, leftInput);
         final PrepareShotCommand prepareShotCommand = new PrepareShotCommand(shooter, hood, () -> swerve.getState().Pose);
         return Commands.parallel(
@@ -80,7 +81,8 @@ public final class SubsystemCommands {
                 .andThen(feed())
         );
     }
-
+*/
+/* 
     public Command shootManually() {
         return shooter.dashboardSpinUpCommand()
             .andThen(feed())
@@ -98,3 +100,4 @@ public final class SubsystemCommands {
         );
     }
 }
+*/

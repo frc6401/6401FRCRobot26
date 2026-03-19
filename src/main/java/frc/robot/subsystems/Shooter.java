@@ -28,7 +28,7 @@ import frc.robot.Constants.KrakenX60;
 import frc.robot.Ports;
 
 public class Shooter extends SubsystemBase {
-    private static final AngularVelocity kVelocityTolerance = RPM.of(100);
+   /*  private static final AngularVelocity kVelocityTolerance = RPM.of(100);
 
     private final TalonFX leftMotor, middleMotor, rightMotor;
     private final List<TalonFX> motors;
@@ -134,4 +134,5 @@ public class Shooter extends SubsystemBase {
         builder.addDoubleProperty("Dashboard RPM", () -> dashboardTargetRPM, value -> dashboardTargetRPM = value);
         builder.addDoubleProperty("Target RPM", () -> velocityRequest.getVelocityMeasure().in(RPM), null);
     }
+        */
 }

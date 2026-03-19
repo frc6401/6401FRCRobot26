@@ -24,7 +24,7 @@ import frc.robot.commands.ManualDriveCommand;
 import frc.robot.commands.SubsystemCommands;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Floor;
-import frc.robot.subsystems.Hanger;
+import frc.robot.subsystems.Hanger; 
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
@@ -52,17 +52,17 @@ public class RobotContainer {
     
     private final CommandXboxController Driver = new CommandXboxController(0);
     private final CommandJoystick Buttons = new CommandJoystick(1);
-    
-     private final AutoRoutines autoRoutines = new AutoRoutines(
+    // ------------------------------------------------------------------------------COMMENTED OUT 3/17/26
+     /*private final AutoRoutines autoRoutines = new AutoRoutines(
         swerve,
         intake,
-        floor,
+      floor,
         feeder,
         shooter,
         hood,
         hanger,
         limelight
-    );
+    ); */
     private final SubsystemCommands subsystemCommands = new SubsystemCommands(
         swerve,
         intake,
@@ -71,15 +71,15 @@ public class RobotContainer {
         shooter,
         hood,
         hanger,
-        () -> -0.5 * Driver.getLeftY(), 
-        () -> -0.5 * Driver.getLeftX()
+        () -> -Driver.getLeftY(), 
+        () -> -Driver.getLeftX()
         //driving speed pt1 (for drive team)
     );
+     
     
-    /** The container for the robot. Contains subsystems, OI devices, and commands. */
      public RobotContainer() {
         configureBindings();
-        autoRoutines.configure();
+       // autoRoutines.configure();
         swerve.registerTelemetry(swerveTelemetry::telemeterize);
     }
     
@@ -91,45 +91,49 @@ public class RobotContainer {
      * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
      * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
      * joysticks}.
-     */
+      */
     private void configureBindings() {
         configureManualDriveBindings();
-        //limelight.setDefaultCommand(updateVisionCommand());  FIX
+        limelight.setDefaultCommand(updateVisionCommand());  
 
-        RobotModeTriggers.autonomous().or(RobotModeTriggers.teleop())
-            .onTrue(intake.homingCommand())
-            .onTrue(hanger.homingCommand());
+        //RobotModeTriggers.autonomous().or(RobotModeTriggers.teleop())
+        //    .onTrue(intake.homingCommand())
+        //    .onTrue(hanger.homingCommand())
+        //    .onTrue(hanger.homingCommand2());
+            
         
-        Driver.button(10).whileTrue(subsystemCommands.aimAndShoot());
-        //Buttons.button(10).whileTrue(subsystemCommands.shootManually());
-        Driver.button(1).whileTrue(intake.intakeCommand());
-        Driver.button(2).onTrue(intake.runOnce(() -> intake.set(Intake.Position.STOWED)));
+        //Button.button(10).whileTrue(subsystemCommands.aimAndShoot());
+        //Driver.button(10).whileTrue(subsystemCommands.shootManually());
+        //Driver.button(2).whileTrue(intake.intakeCommand());
+        //Driver.button(1).onTrue(intake.runOnce(() -> intake.set(Intake.Position.STOWED)));
         
-        //Working Solution
-        while (Driver.getLeftTriggerAxis() > 0.5)
+        //Working Solution ------------------------------------------------------------------------------COMMENTED OUT 3/17/26
+         while (Driver.getLeftTriggerAxis() > 0.5)
         {
-            subsystemCommands.shootManually();
+         //   subsystemCommands.shootManually();
         }
 
-        Driver.button(5).onTrue(hanger.positionCommand(Hanger.Position.HANGING));
-        Driver.button(6).onTrue(hanger.positionCommand(Hanger.Position.HUNG));
+
+       // Driver.button(5).onTrue(hanger.positionCommand(Hanger.Position.HANGING));
+       // Driver.button(6).onTrue(hanger.positionCommand(Hanger.Position.HUNG));
     }
 
     private void configureManualDriveBindings() {
         final ManualDriveCommand manualDriveCommand = new ManualDriveCommand(
             swerve, 
-            () -> -0.5 * Driver.getLeftY(), 
-            () -> -0.5 * Driver.getLeftX(),
-            () -> -0.5 * Driver.getRightX()
+            () -> -Driver.getLeftY(), 
+            () -> -Driver.getLeftX(),
+            () -> -Driver.getRightX()
             // driving speed pt2
         );
         swerve.setDefaultCommand(manualDriveCommand);
         Driver.povDown().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.k180deg)));
         Driver.povRight().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.kCW_90deg)));
         Driver.povLeft().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.kCCW_90deg)));
-       Driver.povUp().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.kZero)));
+        Driver.povUp().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.kZero)));
+        Driver.povUpRight().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.fromDegrees(45))));
        
-        Buttons.button(13).onTrue(Commands.runOnce(() -> manualDriveCommand.seedFieldCentric()));   
+        Driver.button(7).onTrue(Commands.runOnce(() -> manualDriveCommand.seedFieldCentric()));   
     }
 
 

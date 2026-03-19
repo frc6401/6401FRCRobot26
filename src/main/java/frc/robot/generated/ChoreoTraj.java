@@ -27,9 +27,9 @@ public record ChoreoTraj(
     public static final ChoreoTraj OutpostAndDepotTrajectory = new ChoreoTraj(
         "OutpostAndDepotTrajectory",
         OptionalInt.empty(),
-        11.3563,
+        10.94286,
         new Pose2d(3.59816, 0.63985, Rotation2d.fromRadians(3.14159)),
-        new Pose2d(0.94136, 3.56436, Rotation2d.fromRadians(3.14159))
+        new Pose2d(0.59361, 2.10184, Rotation2d.fromRadians(3.14159))
     );
     /** ERROR: Can only use letters, 0-9, and _. Can't use $. Rename it in the Choreo app to fix this error. */
     public static final ChoreoTraj OutpostAndDepotTrajectory$0 = new ChoreoTraj(
@@ -51,7 +51,7 @@ public record ChoreoTraj(
     public static final ChoreoTraj OutpostAndDepotTrajectory$2 = new ChoreoTraj(
         "OutpostAndDepotTrajectory",
         OptionalInt.of(2),
-        2.5827799999999996,
+        2.5827999999999998,
         new Pose2d(0.66833, 5.96377, Rotation2d.fromRadians(3.14159)),
         new Pose2d(2.49839, 4.03528, Rotation2d.fromRadians(0))
     );
@@ -59,9 +59,9 @@ public record ChoreoTraj(
     public static final ChoreoTraj OutpostAndDepotTrajectory$3 = new ChoreoTraj(
         "OutpostAndDepotTrajectory",
         OptionalInt.of(3),
-        3.555109999999999,
+        3.1416499999999994,
         new Pose2d(2.49839, 4.03528, Rotation2d.fromRadians(0)),
-        new Pose2d(0.94136, 3.56436, Rotation2d.fromRadians(3.14159))
+        new Pose2d(0.59361, 2.10184, Rotation2d.fromRadians(3.14159))
     );
 
     /**
