@@ -47,6 +47,8 @@ public class RobotContainer {
     private final Hood hood = new Hood();
     private final Hanger hanger = new Hanger();
     private final Limelight limelight = new Limelight("limelight");
+    private final Camera camera = new Camera();
+
 
     private final SwerveTelemetry swerveTelemetry = new SwerveTelemetry(Driving.kMaxSpeed.in(MetersPerSecond));
     
@@ -79,6 +81,7 @@ public class RobotContainer {
     
      public RobotContainer() {
         configureBindings();
+        camera.camera();
        // autoRoutines.configure();
         swerve.registerTelemetry(swerveTelemetry::telemeterize);
     }
