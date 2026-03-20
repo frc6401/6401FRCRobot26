@@ -25,6 +25,7 @@ import frc.robot.commands.ManualDriveCommand;
 import frc.robot.commands.SubsystemCommands;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Floor;
+import frc.robot.subsystems.Floor.Speed;
 import frc.robot.subsystems.Hanger; 
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Intake;
@@ -105,10 +106,15 @@ public class RobotContainer {
         
         //Button.button(10).whileTrue(subsystemCommands.aimAndShoot());
         // Driver.x().whileTrue(() -> shooter.setMotorSpeed(0.5));
-        Driver.rightBumper().onTrue(new InstantCommand(() -> shooter.setPercentOutput(0.5)));
+        Driver.rightBumper().onTrue(new InstantCommand(() -> shooter.setPercentOutput(0.001)));
         Driver.rightBumper().onFalse(new InstantCommand(() -> shooter.setPercentOutput(0)));
 
-            
+        Driver.rightBumper().onTrue(new InstantCommand(() -> feeder.setPercentOutput(0.001)));
+        Driver.rightBumper().onFalse(new InstantCommand(() -> feeder.setPercentOutput(0)));
+      //Driver.leftBumper().whileTrue(new InstantCommand(() -> floor.set(Speed.FEED)));
+
+
+
         Driver.button(5).whileTrue(subsystemCommands.shootManually());
         Driver.button(2).whileTrue(intake.intakeCommand());
         Driver.button(1).onTrue(intake.runOnce(() -> intake.set(Intake.Position.STOWED)));
