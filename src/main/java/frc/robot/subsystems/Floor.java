@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Ports;
 
 public class Floor extends SubsystemBase {
-   /* public enum Speed {
+   public enum Speed {
         STOP(0),
         FEED(0.001);
 
@@ -77,5 +77,5 @@ public class Floor extends SubsystemBase {
         builder.addDoubleProperty("Stator Current", () -> motor.getStatorCurrent().getValue().in(Amps), null);
         builder.addDoubleProperty("Supply Current", () -> motor.getSupplyCurrent().getValue().in(Amps), null);
     }
-        */
+        
 }

@@ -33,7 +33,7 @@ import frc.robot.Constants.KrakenX60;
 import frc.robot.Ports;
 
 public class Intake extends SubsystemBase {
-   /* public enum Speed {
+   public enum Speed {
         STOP(0),
         INTAKE(0.8);
 
@@ -77,8 +77,8 @@ public class Intake extends SubsystemBase {
     private boolean isHomed = false;
 
     public Intake() {
-        pivotMotor = new TalonFX(Ports.kIntakePivot, Ports.kRoboRioCANBus);
-        rollerMotor = new TalonFX(Ports.kIntakeRollers, Ports.kRoboRioCANBus);
+        pivotMotor = new TalonFX(Ports.kIntakePivot, Ports.kCANivoreCANBus);
+        rollerMotor = new TalonFX(Ports.kIntakeRollers, Ports.kCANivoreCANBus);
         configurePivotMotor();
         configureRollerMotor();
         SmartDashboard.putData(this);
@@ -211,5 +211,5 @@ public class Intake extends SubsystemBase {
         builder.addDoubleProperty("Pivot Supply Current", () -> pivotMotor.getSupplyCurrent().getValue().in(Amps), null);
         builder.addDoubleProperty("Roller Supply Current", () -> rollerMotor.getSupplyCurrent().getValue().in(Amps), null);
     }
-         */
+         
 }

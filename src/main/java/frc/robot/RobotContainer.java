@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
@@ -71,8 +72,8 @@ public class RobotContainer {
         shooter,
         hood,
         hanger,
-        () -> -Driver.getLeftY(), 
-        () -> -Driver.getLeftX()
+        () -> -0.75 * Driver.getLeftY(), 
+        () -> -0.75 * Driver.getLeftX()
         //driving speed pt1 (for drive team)
     );
      
@@ -96,21 +97,26 @@ public class RobotContainer {
         configureManualDriveBindings();
         limelight.setDefaultCommand(updateVisionCommand());  
 
-        //RobotModeTriggers.autonomous().or(RobotModeTriggers.teleop())
-        //    .onTrue(intake.homingCommand())
+        RobotModeTriggers.autonomous().or(RobotModeTriggers.teleop())
+            .onTrue(intake.homingCommand());
         //    .onTrue(hanger.homingCommand())
         //    .onTrue(hanger.homingCommand2());
             
         
         //Button.button(10).whileTrue(subsystemCommands.aimAndShoot());
-        //Driver.button(10).whileTrue(subsystemCommands.shootManually());
-        //Driver.button(2).whileTrue(intake.intakeCommand());
-        //Driver.button(1).onTrue(intake.runOnce(() -> intake.set(Intake.Position.STOWED)));
+        // Driver.x().whileTrue(() -> shooter.setMotorSpeed(0.5));
+        Driver.rightBumper().onTrue(new InstantCommand(() -> shooter.setPercentOutput(0.5)));
+        Driver.rightBumper().onFalse(new InstantCommand(() -> shooter.setPercentOutput(0)));
+
+            
+        Driver.button(5).whileTrue(subsystemCommands.shootManually());
+        Driver.button(2).whileTrue(intake.intakeCommand());
+        Driver.button(1).onTrue(intake.runOnce(() -> intake.set(Intake.Position.STOWED)));
         
         //Working Solution ------------------------------------------------------------------------------COMMENTED OUT 3/17/26
          while (Driver.getLeftTriggerAxis() > 0.5)
         {
-         //   subsystemCommands.shootManually();
+            subsystemCommands.shootManually();
         }
 
 
@@ -121,9 +127,9 @@ public class RobotContainer {
     private void configureManualDriveBindings() {
         final ManualDriveCommand manualDriveCommand = new ManualDriveCommand(
             swerve, 
-            () -> -Driver.getLeftY(), 
-            () -> -Driver.getLeftX(),
-            () -> -Driver.getRightX()
+            () -> -0.75 * Driver.getLeftY(), 
+            () -> -0.75 * Driver.getLeftX(),
+            () -> -0.75 * Driver.getRightX()
             // driving speed pt2
         );
         swerve.setDefaultCommand(manualDriveCommand);
@@ -131,7 +137,7 @@ public class RobotContainer {
         Driver.povRight().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.kCW_90deg)));
         Driver.povLeft().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.kCCW_90deg)));
         Driver.povUp().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.kZero)));
-        Driver.povUpRight().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.fromDegrees(45))));
+        Driver.button(8).onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.fromDegrees(45))));
        
         Driver.button(7).onTrue(Commands.runOnce(() -> manualDriveCommand.seedFieldCentric()));   
     }

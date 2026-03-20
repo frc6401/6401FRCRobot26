@@ -18,7 +18,7 @@ import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Shooter;
 
 public class PrepareShotCommand extends Command {
-   /*  private static final InterpolatingTreeMap<Distance, Shot> distanceToShotMap = new InterpolatingTreeMap<>(
+   private static final InterpolatingTreeMap<Distance, Shot> distanceToShotMap = new InterpolatingTreeMap<>(
         (startValue, endValue, q) -> 
             InverseInterpolator.forDouble()
                 .inverseInterpolate(startValue.in(Meters), endValue.in(Meters), q.in(Meters)),
@@ -86,5 +86,5 @@ public class PrepareShotCommand extends Command {
             this.hoodPosition = hoodPosition;
         }
     }
-         */
+         
 }
