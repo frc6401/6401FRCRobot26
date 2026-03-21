@@ -12,13 +12,16 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.util.PixelFormat;
 
 public class Camera extends SubsystemBase {
+    private final UsbCamera camera;
     public Camera()
     {
-        UsbCamera camera = CameraServer.startAutomaticCapture(0);
+        camera = CameraServer.startAutomaticCapture(0);
+
+        camera.setResolution(320, 240);
+        camera.setFPS(15);
 
 
-
-        UsbCamera usbCamera = new UsbCamera("USB Camera 0", 0);
+        /*
         MjpegServer mjpegServer1 = new MjpegServer("serve_USB Camera 0", 1181);
         mjpegServer1.setSource(usbCamera);
         // Creates the CvSink and connects it to the UsbCamera
@@ -31,6 +34,7 @@ public class Camera extends SubsystemBase {
         
         
         NetworkTableEntry cameraSelection = NetworkTableInstance.getDefault().getTable("").getEntry("CameraSelection");
+        */
 
 
 
