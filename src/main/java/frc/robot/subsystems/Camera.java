@@ -12,13 +12,13 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.util.PixelFormat;
 
 public class Camera extends SubsystemBase {
-    private final UsbCamera camera;
+    private final UsbCamera Camera;
     public Camera()
     {
-        camera = CameraServer.startAutomaticCapture(0);
+        Camera = CameraServer.startAutomaticCapture(0);
 
-        camera.setResolution(320, 240);
-        camera.setFPS(15);
+        Camera.setResolution(320, 240);
+        Camera.setFPS(15);
 
 
         /*

@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
@@ -33,7 +34,7 @@ import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 import frc.util.SwerveTelemetry;
-
+import frc.robot.subsystems.Camera;
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -56,6 +57,7 @@ public class RobotContainer {
     
     private final CommandXboxController Driver = new CommandXboxController(0);
     private final CommandJoystick Buttons = new CommandJoystick(1);
+    // private final CommandJoystick Driver1 = new CommandJoystick(0);
     // ------------------------------------------------------------------------------COMMENTED OUT 3/17/26
      /*private final AutoRoutines autoRoutines = new AutoRoutines(
         swerve,
@@ -75,15 +77,15 @@ public class RobotContainer {
         shooter,
         hood,
         hanger,
-        () -> -0.75 * Driver.getLeftY(), 
-        () -> -0.75 * Driver.getLeftX()
+        () -> Driver.getLeftX(), 
+        () -> Driver.getLeftY()
         //driving speed pt1 (for drive team)
     );
      
     
      public RobotContainer() {
         configureBindings();
-        camera.camera();
+        Camera camera = new Camera();
        // autoRoutines.configure();
         swerve.registerTelemetry(swerveTelemetry::telemeterize);
     }
@@ -103,24 +105,37 @@ public class RobotContainer {
 
         RobotModeTriggers.autonomous().or(RobotModeTriggers.teleop())
             .onTrue(intake.homingCommand());
-        //    .onTrue(hanger.homingCommand())
+        //    .onTrue(hanger.homingCommand()) ts is homing the robot at start
         //    .onTrue(hanger.homingCommand2());
+        RobotModeTriggers.autonomous()
+            //.onTrue(new InstantCommand(() -> shooter.setPercentOutput(0.5)))
+            .onTrue(new InstantCommand(() -> feeder.setPercentOutput(0.5)));
             
+
+            
+            
+        RobotModeTriggers.teleop()
+            .onTrue(new InstantCommand(() -> shooter.setPercentOutput(0)))
+            .onTrue(new InstantCommand(() -> feeder.setPercentOutput(0)));
         
         //Button.button(10).whileTrue(subsystemCommands.aimAndShoot());
-        // Driver.x().whileTrue(() -> shooter.setMotorSpeed(0.5));
-        Driver.rightBumper().onTrue(new InstantCommand(() -> shooter.setPercentOutput(0.001)));
-        Driver.rightBumper().onFalse(new InstantCommand(() -> shooter.setPercentOutput(0)));
+        Buttons.button(1).onTrue(new InstantCommand(() -> shooter.setPercentOutput(0.75)));
+        Buttons.button(1).onFalse(new InstantCommand(() -> shooter.setPercentOutput(0)));
+       // Driver.button(6).whileTrue(new InstantCommand(() -> shooter.setPercentOutput(0.010)));
+       // Driver.button(6).onFalse(new InstantCommand(() -> shooter.setPercentOutput(0)));
 
-        Driver.rightBumper().onTrue(new InstantCommand(() -> feeder.setPercentOutput(0.001)));
-        Driver.rightBumper().onFalse(new InstantCommand(() -> feeder.setPercentOutput(0)));
-      //Driver.leftBumper().whileTrue(new InstantCommand(() -> floor.set(Speed.FEED)));
+        Buttons.button(4).whileTrue(new InstantCommand(() -> feeder.setPercentOutput(0.5)));
+        Buttons.button(4).onFalse(new InstantCommand(() -> feeder.setPercentOutput(0)));
+        Buttons.button(3).whileTrue(new InstantCommand(() -> floor.set(Speed.FEED)));
+        Buttons.button(3).onFalse(new InstantCommand(() -> floor.set(Speed.STOP)));
+        Buttons.button(3).whileTrue(new InstantCommand(() -> intake.intakeCommand()));
+        //Driver.button(2).whileTrue(new InstantCommand(() -> intake.agitateCommand()));
 
 
-
-        Driver.button(5).whileTrue(subsystemCommands.shootManually());
-        Driver.button(2).whileTrue(intake.intakeCommand());
-        Driver.button(1).onTrue(intake.runOnce(() -> intake.set(Intake.Position.STOWED)));
+        //Driver.button(5).whileTrue(subsystemCommands.shootManually());
+        Driver.button(5).whileTrue(intake.intakeCommand());
+        Buttons.button(4).onTrue(intake.runOnce(() -> intake.set(Intake.Position.STOWED)));
+        //Driver.rightTrigger().whileTrue(subsystemCommands.shootManually());
         
         //Working Solution ------------------------------------------------------------------------------COMMENTED OUT 3/17/26
          while (Driver.getLeftTriggerAxis() > 0.5)
@@ -136,10 +151,14 @@ public class RobotContainer {
     private void configureManualDriveBindings() {
         final ManualDriveCommand manualDriveCommand = new ManualDriveCommand(
             swerve, 
-            () -> -0.75 * Driver.getLeftY(), 
-            () -> -0.75 * Driver.getLeftX(),
-            () -> -0.75 * Driver.getRightX()
+            () -> Driver.getLeftX(), 
+            () -> Driver.getLeftY(),
+            () -> Driver.getRightX()
             // driving speed pt2
+            // was before 
+            // Driver.getLeftY
+            // Driver.getLeftX
+            //Driver.getRightX
         );
         swerve.setDefaultCommand(manualDriveCommand);
         Driver.povDown().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.k180deg)));
