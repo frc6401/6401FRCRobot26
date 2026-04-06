@@ -22,7 +22,7 @@ import frc.robot.Ports;
 public class Floor extends SubsystemBase {
    public enum Speed {
         STOP(0),
-        FEED(0.8);
+        FEED(0.3);
 
         private final double percentOutput;
 
@@ -49,9 +49,9 @@ public class Floor extends SubsystemBase {
             )
             .withCurrentLimits(
                 new CurrentLimitsConfigs()
-                    .withStatorCurrentLimit(Amps.of(45)) //was 120
+                    .withStatorCurrentLimit(Amps.of(25)) //was 120
                     .withStatorCurrentLimitEnable(true)
-                    .withSupplyCurrentLimit(Amps.of(30))
+                    .withSupplyCurrentLimit(Amps.of(20))
                     .withSupplyCurrentLimitEnable(true)
             );
 

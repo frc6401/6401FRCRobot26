@@ -35,7 +35,7 @@ import frc.robot.Ports;
 public class Intake extends SubsystemBase {
    public enum Speed {
         STOP(0),
-        INTAKE(0.8);
+        INTAKE(1);
 
         private final double percentOutput;
 
@@ -49,10 +49,20 @@ public class Intake extends SubsystemBase {
     }
 
     public enum Position {
-        HOMED(90),  //110
-        STOWED(80),   //100
-        INTAKE(-4),
-        AGITATE(20);
+        HOMED(110),  //110
+        STOWED(100),   //100
+        INTAKE(90),
+        AGITATE(10),
+        //Test Values
+        TEST(-10),
+        TEST1(0),
+        TEST2(20),
+        TEST3(40),
+        TEST4(60),
+        TEST5(80),
+        TEST6(100),
+        TEST7(120);
+
 
         private final double degrees;
 
@@ -61,7 +71,9 @@ public class Intake extends SubsystemBase {
         }
 
         public Angle angle() {
+            
             return Degrees.of(degrees);
+            
         }
     }
 
@@ -74,7 +86,7 @@ public class Intake extends SubsystemBase {
     private final MotionMagicVoltage pivotMotionMagicRequest = new MotionMagicVoltage(0).withSlot(0);
     private final VoltageOut rollerVoltageRequest = new VoltageOut(0);
 
-    private boolean isHomed = true;
+    private boolean isHomed = false;
 
     public Intake() {
         pivotMotor = new TalonFX(Ports.kIntakePivot, Ports.kCANivoreCANBus);
@@ -88,7 +100,7 @@ public class Intake extends SubsystemBase {
         final TalonFXConfiguration config = new TalonFXConfiguration()
             .withMotorOutput(
                 new MotorOutputConfigs()
-                    .withInverted(InvertedValue.CounterClockwise_Positive)
+                    .withInverted(InvertedValue.Clockwise_Positive)
                     .withNeutralMode(NeutralModeValue.Brake)
             )
             .withCurrentLimits(
@@ -127,7 +139,7 @@ public class Intake extends SubsystemBase {
             )
             .withCurrentLimits(
                 new CurrentLimitsConfigs()
-                    .withStatorCurrentLimit(Amps.of(20)) //120
+                    .withStatorCurrentLimit(Amps.of(30)) //120
                     .withStatorCurrentLimitEnable(true)
                     .withSupplyCurrentLimit(Amps.of(25)) //70
                     .withSupplyCurrentLimitEnable(true)
@@ -138,6 +150,7 @@ public class Intake extends SubsystemBase {
     private boolean isPositionWithinTolerance() {
         final Angle currentPosition = pivotMotor.getPosition().getValue();
         final Angle targetPosition = pivotMotionMagicRequest.getPositionMeasure();
+        System.out.println(currentPosition); //For Debugging
         return currentPosition.isNear(targetPosition, kPositionTolerance);
     }
 

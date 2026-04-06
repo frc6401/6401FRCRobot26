@@ -55,7 +55,7 @@ public class Feeder extends SubsystemBase {
                 new CurrentLimitsConfigs()
                     .withStatorCurrentLimit(Amps.of(25)) //was 120
                     .withStatorCurrentLimitEnable(true)
-                    .withSupplyCurrentLimit(Amps.of(30))//maybe 60-80    was 50
+                    .withSupplyCurrentLimit(Amps.of(25))//maybe 60-80    was 50
                     .withSupplyCurrentLimitEnable(true)
             )
             .withSlot0(
