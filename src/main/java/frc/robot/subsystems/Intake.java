@@ -49,11 +49,11 @@ public class Intake extends SubsystemBase {
     }
 
     public enum Position {
-        HOMED(110),  //110
-        STOWED(100),   //100
-        INTAKE(90),
+        HOMED(0),  //110
+        STOWED(0),   //100
+        INTAKE(105),
         AGITATE(10),
-        //Test Values
+        //DEBUGGING Values
         TEST(-10),
         TEST1(0),
         TEST2(20),
@@ -61,7 +61,7 @@ public class Intake extends SubsystemBase {
         TEST4(60),
         TEST5(80),
         TEST6(100),
-        TEST7(120);
+        TEST7(105);
 
 
         private final double degrees;

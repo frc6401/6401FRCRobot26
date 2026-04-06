@@ -88,6 +88,11 @@ public class Shooter extends SubsystemBase {
         }
     }
 
+    public double getRPMValue()
+    {
+         return (leftMotor.getVelocity().getValue().in(RPM) + middleMotor.getVelocity().getValue().in(RPM) + rightMotor.getVelocity().getValue().in(RPM))/3;
+    }
+
     public void setPercentOutput(double percentOutput) {
         for (final TalonFX motor : motors) {
             motor.setControl(

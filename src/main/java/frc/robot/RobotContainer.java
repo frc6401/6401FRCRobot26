@@ -5,36 +5,33 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RPM;
 
 import java.util.Optional;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Driving;
-import frc.robot.commands.AutoRoutines;
 import frc.robot.commands.ManualDriveCommand;
 import frc.robot.commands.SubsystemCommands;
+import frc.robot.subsystems.Camera;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Floor;
 import frc.robot.subsystems.Floor.Speed;
-import frc.robot.subsystems.Hanger; 
+import frc.robot.subsystems.Hanger;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 import frc.util.SwerveTelemetry;
-import frc.robot.subsystems.Camera;
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -79,8 +76,8 @@ public class RobotContainer {
         shooter,
         hood,
         hanger,
-        () -> -0.50 * Driver1.getX(), 
-        () -> -0.50 * Driver1.getY()
+        () -> -0.80 * Driver1.getX(), 
+        () -> -0.80 * Driver1.getY()
         //driving speed pt1 (for drive team)
         
     );
@@ -107,9 +104,10 @@ public class RobotContainer {
         limelight.setDefaultCommand(updateVisionCommand());  
 
         //RobotModeTriggers.autonomous().or(RobotModeTriggers.teleop())
-           // .onTrue(intake.homingCommand());
+        // .onTrue(intake.homingCommand());
         //    .onTrue(hanger.homingCommand()) ts is homing the robot at start
         //    .onTrue(hanger.homingCommand2());
+        
         RobotModeTriggers.autonomous()
             //.onTrue(new InstantCommand(() -> shooter.setPercentOutput(0.5)))
             .onTrue(new InstantCommand(() -> feeder.setPercentOutput(0.5)));
@@ -124,6 +122,8 @@ public class RobotContainer {
         //Button.button(10).whileTrue(subsystemCommands.aimAndShoot());
         Buttons.button(1).onTrue(new InstantCommand(() -> shooter.setPercentOutput(0.65)));
         Buttons.button(1).onFalse(new InstantCommand(() -> shooter.setPercentOutput(0)));
+        
+
        // Driver.button(6).whileTrue(new InstantCommand(() -> shooter.setPercentOutput(0.010)));
        // Driver.button(6).onFalse(new InstantCommand(() -> shooter.setPercentOutput(0)));
 
@@ -139,20 +139,27 @@ public class RobotContainer {
         //Driver.button(5).whileTrue(subsystemCommands.shootManually());
         //
         Driver1.button(1).whileTrue(intake.intakeCommand());
-        //Driver1.button(4).onTrue(intake.runOnce(() -> intake.set(Intake.Position.STOWED)));
-        //Driver.rightTrigger().whileTrue(subsystemCommands.shootManually());
+        Driver1.button(2).onTrue(intake.runOnce(() -> intake.set(Intake.Position.STOWED)));
         
-        //Working Solution ------------------------------------------------------------------------------COMMENTED OUT 3/17/26
-        /*
-        while (Driver.getLeftTriggerAxis() > 0.5)
-        {
-            subsystemCommands.shootManually();
+        //DEBUGGING TOOLS
+
+        //DEBUGGING ANGLE
+        Driver1.button(5).onTrue(intake.runOnce(() -> intake.set(Intake.Position.TEST)));
+        Driver1.button(6).onTrue(intake.runOnce(() -> intake.set(Intake.Position.TEST1)));
+        Driver1.button(7).onTrue(intake.runOnce(() -> intake.set(Intake.Position.TEST2)));
+        Driver1.button(8).onTrue(intake.runOnce(() -> intake.set(Intake.Position.TEST3)));
+        Driver1.button(9).onTrue(intake.runOnce(() -> intake.set(Intake.Position.TEST4)));
+        Driver1.button(10).onTrue(intake.runOnce(() -> intake.set(Intake.Position.TEST5)));
+        Driver1.button(11).onTrue(intake.runOnce(() -> intake.set(Intake.Position.TEST6)));
+        Driver1.button(12).onTrue(intake.runOnce(() -> intake.set(Intake.Position.TEST7)));
+
+        //DEBUGGING RPM
+        if (Buttons.getThrottle() >= 0 ) {
+            shooter.setRPM(Buttons.getThrottle()*3000);
         }
-        */
+        System.out.println("RPM: " + shooter.getRPMValue());
 
 
-       // Driver.button(5).onTrue(hanger.positionCommand(Hanger.Position.HANGING));
-       // Driver.button(6).onTrue(hanger.positionCommand(Hanger.Position.HUNG));
     }
 
     private void configureManualDriveBindings() {
