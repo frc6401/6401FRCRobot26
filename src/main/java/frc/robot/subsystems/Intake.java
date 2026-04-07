@@ -49,19 +49,19 @@ public class Intake extends SubsystemBase {
     }
 
     public enum Position {
-        HOMED(0),  //110
-        STOWED(0),   //100
-        INTAKE(105),
-        AGITATE(10),
+        HOMED(110),  //110
+        STOWED(100),   //100
+        INTAKE(6),
+        AGITATE(60),
         //DEBUGGING Values
         TEST(-10),
         TEST1(0),
-        TEST2(20),
-        TEST3(40),
-        TEST4(60),
-        TEST5(80),
-        TEST6(100),
-        TEST7(105);
+        TEST2(10),
+        TEST3(15),
+        TEST4(20),
+        TEST5(25),
+        TEST6(30),
+        TEST7(100);
 
 
         private final double degrees;
@@ -100,7 +100,7 @@ public class Intake extends SubsystemBase {
         final TalonFXConfiguration config = new TalonFXConfiguration()
             .withMotorOutput(
                 new MotorOutputConfigs()
-                    .withInverted(InvertedValue.Clockwise_Positive)
+                    .withInverted(InvertedValue.CounterClockwise_Positive)
                     .withNeutralMode(NeutralModeValue.Brake)
             )
             .withCurrentLimits(
@@ -122,7 +122,7 @@ public class Intake extends SubsystemBase {
             )
             .withSlot0(
                 new Slot0Configs()
-                    .withKP(300)
+                    .withKP(100)
                     .withKI(0)
                     .withKD(0)
                     .withKV(12.0 / kMaxPivotSpeed.in(RotationsPerSecond)) // 12 volts when requesting max RPS

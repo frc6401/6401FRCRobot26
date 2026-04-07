@@ -103,9 +103,9 @@ public class RobotContainer {
         configureManualDriveBindings();
         limelight.setDefaultCommand(updateVisionCommand());  
 
-        //RobotModeTriggers.autonomous().or(RobotModeTriggers.teleop())
-        // .onTrue(intake.homingCommand());
-        //    .onTrue(hanger.homingCommand()) ts is homing the robot at start
+        RobotModeTriggers.autonomous().or(RobotModeTriggers.teleop())
+         .onTrue(intake.homingCommand());
+        //  .onTrue(hanger.homingCommand()) ts is homing the robot at start
         //    .onTrue(hanger.homingCommand2());
         
         RobotModeTriggers.autonomous()
