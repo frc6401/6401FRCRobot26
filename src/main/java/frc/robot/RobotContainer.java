@@ -11,6 +11,7 @@ import java.util.Optional;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -19,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Driving;
+import frc.robot.commands.PrepareShotCommand;
 import frc.robot.commands.ManualDriveCommand;
 import frc.robot.commands.SubsystemCommands;
 import frc.robot.subsystems.Camera;
@@ -53,8 +55,8 @@ public class RobotContainer {
     private final SwerveTelemetry swerveTelemetry = new SwerveTelemetry(Driving.kMaxSpeed.in(MetersPerSecond));
     
     private final CommandXboxController Driver = new CommandXboxController(2);
-    private final CommandJoystick Buttons = new CommandJoystick(1);
     private final CommandJoystick Driver1 = new CommandJoystick(0);
+    private final CommandJoystick Buttons = new CommandJoystick(1);
     private final CommandJoystick DriverRotate = new CommandJoystick(2);
     
     // ------------------------------------------------------------------------------COMMENTED OUT 3/17/26
@@ -68,6 +70,7 @@ public class RobotContainer {
         hanger,
         limelight
     ); */
+
     private final SubsystemCommands subsystemCommands = new SubsystemCommands(
         swerve,
         intake,
@@ -78,7 +81,6 @@ public class RobotContainer {
         hanger,
         () -> -0.80 * Driver1.getX(), 
         () -> -0.80 * Driver1.getY()
-        //driving speed pt1 (for drive team)
         
     );
      
@@ -105,41 +107,24 @@ public class RobotContainer {
 
         RobotModeTriggers.autonomous().or(RobotModeTriggers.teleop())
          .onTrue(intake.homingCommand());
-        //  .onTrue(hanger.homingCommand()) ts is homing the robot at start
-        //    .onTrue(hanger.homingCommand2());
         
-        RobotModeTriggers.autonomous()
-            //.onTrue(new InstantCommand(() -> shooter.setPercentOutput(0.5)))
-            .onTrue(new InstantCommand(() -> feeder.setPercentOutput(0.5)));
-            
 
-            
-            
-        RobotModeTriggers.teleop()
-            .onTrue(new InstantCommand(() -> shooter.setPercentOutput(0)))
-            .onTrue(new InstantCommand(() -> feeder.setPercentOutput(0)));
-        
+        //SHOOTERS
         //Button.button(10).whileTrue(subsystemCommands.aimAndShoot());
         Buttons.button(1).onTrue(new InstantCommand(() -> shooter.setPercentOutput(0.65)));
         Buttons.button(1).onFalse(new InstantCommand(() -> shooter.setPercentOutput(0)));
-        
+        Buttons.button(1).onFalse(new InstantCommand(() -> shooter.setPercentOutput(0)));
 
-       // Driver.button(6).whileTrue(new InstantCommand(() -> shooter.setPercentOutput(0.010)));
-       // Driver.button(6).onFalse(new InstantCommand(() -> shooter.setPercentOutput(0)));
 
+        //FLOOR AND FEEDERS
         Buttons.button(12).onTrue(new InstantCommand(() -> feeder.setPercentOutput(0.35)));
         Buttons.button(12).onFalse(new InstantCommand(() -> feeder.setPercentOutput(0)));
         Buttons.button(11).onTrue(new InstantCommand(() -> floor.set(Speed.FEED)));
         Buttons.button(11).onFalse(new InstantCommand(() -> floor.set(Speed.STOP)));
-        //Buttons.button(3).whileTrue(new InstantCommand(() -> intake.intakeCommand()));
-        //Driver1.button(8).onTrue(new InstantCommand(() -> intake.agitateCommand()));
-
-        
-        
-        //Driver.button(5).whileTrue(subsystemCommands.shootManually());
-        //
-        Driver1.button(1).whileTrue(intake.intakeCommand());
-        Driver1.button(2).onTrue(intake.runOnce(() -> intake.set(Intake.Position.STOWED)));
+      
+        //INTAKE
+        Buttons.button(9).whileTrue(intake.intakeCommand());
+        Buttons.button(10).onTrue(intake.runOnce(() -> intake.set(Intake.Position.STOWED)));
         
         //DEBUGGING TOOLS
 
@@ -152,12 +137,18 @@ public class RobotContainer {
         Driver1.button(10).onTrue(intake.runOnce(() -> intake.set(Intake.Position.TEST5)));
         Driver1.button(11).onTrue(intake.runOnce(() -> intake.set(Intake.Position.TEST6)));
         Driver1.button(12).onTrue(intake.runOnce(() -> intake.set(Intake.Position.TEST7)));
-
+        Driver1.button(16).onTrue(new InstantCommand(() -> intake.setPivotPercentOutput(0.1)));
+        Driver1.button(16).onFalse(new InstantCommand(() -> intake.setPivotPercentOutput(0)));
+        
         //DEBUGGING RPM
-        if (Buttons.getThrottle() >= 0 ) {
-            shooter.setRPM(Buttons.getThrottle()*3000);
-        }
-        System.out.println("RPM: " + shooter.getRPMValue());
+        /* 
+        double slider;
+        slider = (Buttons.getThrottle() + 1.0) / 2;
+        shooter.setPercentOutput(slider);
+        */
+        
+        
+
 
 
     }
@@ -168,13 +159,11 @@ public class RobotContainer {
             () -> -0.80 * Driver1.getY(), 
             () -> -0.80 * Driver1.getX(),
             () -> -0.80 * DriverRotate.getX()
-            // driving speed pt2
-            // was before 
-            // Driver.getLeftY
-            // Driver.getLeftX
-            //Driver.getRightX
+
         );
         swerve.setDefaultCommand(manualDriveCommand);
+
+        //HEADINGS (NEED TO BE ASSINGED A CONTROLLER)
         Driver.povDown().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.k180deg)));
         Driver.povRight().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.kCW_90deg)));
         Driver.povLeft().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.kCCW_90deg)));

@@ -51,7 +51,7 @@ public class Intake extends SubsystemBase {
     public enum Position {
         HOMED(110),  //110
         STOWED(100),   //100
-        INTAKE(6),
+        INTAKE(-9.5),
         AGITATE(60),
         //DEBUGGING Values
         TEST(-10),
@@ -117,12 +117,12 @@ public class Intake extends SubsystemBase {
             )
             .withMotionMagic(
                 new MotionMagicConfigs()
-                    .withMotionMagicCruiseVelocity(kMaxPivotSpeed)
-                    .withMotionMagicAcceleration(kMaxPivotSpeed.per(Second))
+                    .withMotionMagicCruiseVelocity(kMaxPivotSpeed.times(3))
+                    .withMotionMagicAcceleration(kMaxPivotSpeed.per(Second).times(1))
             )
             .withSlot0(
                 new Slot0Configs()
-                    .withKP(100)
+                    .withKP(500)
                     .withKI(0)
                     .withKD(0)
                     .withKV(12.0 / kMaxPivotSpeed.in(RotationsPerSecond)) // 12 volts when requesting max RPS
@@ -150,11 +150,10 @@ public class Intake extends SubsystemBase {
     private boolean isPositionWithinTolerance() {
         final Angle currentPosition = pivotMotor.getPosition().getValue();
         final Angle targetPosition = pivotMotionMagicRequest.getPositionMeasure();
-        System.out.println(currentPosition); //For Debugging
         return currentPosition.isNear(targetPosition, kPositionTolerance);
     }
 
-    private void setPivotPercentOutput(double percentOutput) {
+    public void setPivotPercentOutput(double percentOutput) {
         pivotMotor.setControl(
             pivotVoltageRequest
                 .withOutput(Volts.of(percentOutput * 12.0))
@@ -166,6 +165,7 @@ public class Intake extends SubsystemBase {
             pivotMotionMagicRequest
                 .withPosition(position.angle())
         );
+        isHomed = false;
     }
 
     public void set(Speed speed) {
@@ -182,7 +182,9 @@ public class Intake extends SubsystemBase {
                 set(Speed.INTAKE);
             },
             () -> set(Speed.STOP)
+            
         );
+        
     }
 
     public Command agitateCommand() {
