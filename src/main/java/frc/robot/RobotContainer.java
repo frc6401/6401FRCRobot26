@@ -114,7 +114,7 @@ public class RobotContainer {
         Buttons.button(1).onTrue(new InstantCommand(() -> shooter.setPercentOutput(0.65)));
         Buttons.button(1).onFalse(new InstantCommand(() -> shooter.setPercentOutput(0)));
         Buttons.button(1).onFalse(new InstantCommand(() -> shooter.setPercentOutput(0)));
-
+        //Buttons.button(1).whileTrue(subsystemCommands.shootManually()); For future use
 
         //FLOOR AND FEEDERS
         Buttons.button(12).onTrue(new InstantCommand(() -> feeder.setPercentOutput(0.35)));
@@ -141,12 +141,14 @@ public class RobotContainer {
         Driver1.button(16).onFalse(new InstantCommand(() -> intake.setPivotPercentOutput(0)));
         
         //DEBUGGING RPM
+        /*
         shooter.setDefaultCommand(shooter.run(() -> 
         {
         double slider;
         slider = (Buttons.getThrottle() + 1.0) / 2;
         shooter.setPercentOutput(slider);
         }));
+        */
 
         
 

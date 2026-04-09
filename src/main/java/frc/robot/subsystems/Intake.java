@@ -52,7 +52,7 @@ public class Intake extends SubsystemBase {
         HOMED(110),  //110
         STOWED(100),   //100
         INTAKE(-9.5),
-        AGITATE(60),
+        AGITATE(25),
         //DEBUGGING Values
         TEST(-10),
         TEST1(0),
@@ -122,7 +122,7 @@ public class Intake extends SubsystemBase {
             )
             .withSlot0(
                 new Slot0Configs()
-                    .withKP(500)
+                    .withKP(300)
                     .withKI(0)
                     .withKD(0)
                     .withKV(12.0 / kMaxPivotSpeed.in(RotationsPerSecond)) // 12 volts when requesting max RPS
