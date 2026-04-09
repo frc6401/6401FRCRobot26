@@ -141,12 +141,13 @@ public class RobotContainer {
         Driver1.button(16).onFalse(new InstantCommand(() -> intake.setPivotPercentOutput(0)));
         
         //DEBUGGING RPM
-        /* 
+        shooter.setDefaultCommand(shooter.run(() -> 
+        {
         double slider;
         slider = (Buttons.getThrottle() + 1.0) / 2;
         shooter.setPercentOutput(slider);
-        */
-        
+        }));
+
         
 
 
