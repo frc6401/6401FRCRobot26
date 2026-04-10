@@ -6,6 +6,7 @@ import edu.wpi.first.cscore.CvSink;
 import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.cscore.MjpegServer;
 import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.cscore.VideoSource;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -15,10 +16,15 @@ public class Camera extends SubsystemBase {
     private final UsbCamera Camera;
     public Camera()
     {
-        Camera = CameraServer.startAutomaticCapture(0);
+     
 
-        Camera.setResolution(320, 240);
-        Camera.setFPS(15);
+        Camera = CameraServer.startAutomaticCapture(0);
+        //potential fix
+        Camera.setConnectionStrategy(VideoSource.ConnectionStrategy.kKeepOpen);
+
+
+        //Camera.setResolution(320, 240);
+        //Camera.setFPS(15);
 
 
         /*

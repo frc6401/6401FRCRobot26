@@ -51,7 +51,7 @@ public class Intake extends SubsystemBase {
     public enum Position {
         HOMED(110),  //110
         STOWED(100),   //100
-        INTAKE(-9.5),
+        INTAKE(-10),
         AGITATE(25),
         //DEBUGGING Values
         TEST(-10),
@@ -77,6 +77,7 @@ public class Intake extends SubsystemBase {
         }
     }
 
+    //58/12 maybe
     private static final double kPivotReduction = 50.0;
     private static final AngularVelocity kMaxPivotSpeed = KrakenX60.kFreeSpeed.div(kPivotReduction);
     private static final Angle kPositionTolerance = Degrees.of(5);
@@ -139,9 +140,9 @@ public class Intake extends SubsystemBase {
             )
             .withCurrentLimits(
                 new CurrentLimitsConfigs()
-                    .withStatorCurrentLimit(Amps.of(30)) //120
+                    .withStatorCurrentLimit(Amps.of(35)) //120
                     .withStatorCurrentLimitEnable(true)
-                    .withSupplyCurrentLimit(Amps.of(25)) //70
+                    .withSupplyCurrentLimit(Amps.of(30)) //70
                     .withSupplyCurrentLimitEnable(true)
             );
         rollerMotor.getConfigurator().apply(config);

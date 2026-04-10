@@ -16,6 +16,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -23,6 +24,16 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.subsystems.TunerConstants.TunerSwerveDrivetrain;
 import frc.robot.subsystems.TunerConstants;
+
+//TEST FOR DISTANCE
+import frc.robot.commands.PrepareShotCommand;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
+import frc.robot.Landmarks;
+
+
 
 public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
@@ -116,6 +127,15 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
         );
     }
 
+    //TEST FOR SMARTDASHBOARD
+    public Distance getDistanceToHub() {
+        Supplier<Pose2d> robotPoseSupplier;  
+        robotPoseSupplier = () -> getState().Pose;      
+        final Translation2d robotPosition = robotPoseSupplier.get().getTranslation();
+        final Translation2d hubPosition = Landmarks.hubPosition();
+        return Meters.of(robotPosition.getDistance(hubPosition));
+    }
+
     @Override
     public void periodic() {
         /*
@@ -142,6 +162,12 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
         //Elastic suffz
         Pigeon2 pigeon2 = new Pigeon2(0);
         SmartDashboard.putNumber("GyroAngle", pigeon2.getRotation2d().getDegrees());
+
+        //Distance To Hub
+        Distance distanceToHub = getDistanceToHub();
+        SmartDashboard.putNumber("Distance to Hub (inches)", distanceToHub.in(Inches));
+
+
         
 
     }

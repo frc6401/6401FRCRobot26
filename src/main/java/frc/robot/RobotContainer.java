@@ -23,6 +23,10 @@ import frc.robot.Constants.Driving;
 import frc.robot.commands.PrepareShotCommand;
 import frc.robot.commands.ManualDriveCommand;
 import frc.robot.commands.SubsystemCommands;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.cscore.VideoSource;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.cameraserver.CameraServer;
 import frc.robot.subsystems.Camera;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Floor;
@@ -56,8 +60,9 @@ public class RobotContainer {
     
     private final CommandXboxController Driver = new CommandXboxController(2);
     private final CommandJoystick Driver1 = new CommandJoystick(0);
-    private final CommandJoystick Buttons = new CommandJoystick(1);
-    private final CommandJoystick DriverRotate = new CommandJoystick(2);
+    private final CommandJoystick DriverRotate = new CommandJoystick(1);
+    private final CommandJoystick Buttons = new CommandJoystick(2);
+
     
     // ------------------------------------------------------------------------------COMMENTED OUT 3/17/26
      /*private final AutoRoutines autoRoutines = new AutoRoutines(
@@ -88,6 +93,7 @@ public class RobotContainer {
      public RobotContainer() {
         configureBindings();
         Camera camera = new Camera();
+
        // autoRoutines.configure();
         swerve.registerTelemetry(swerveTelemetry::telemeterize);
     }
@@ -109,26 +115,29 @@ public class RobotContainer {
          .onTrue(intake.homingCommand());
         
 
-        //SHOOTERS
-        //Button.button(10).whileTrue(subsystemCommands.aimAndShoot());
-        Buttons.button(1).onTrue(new InstantCommand(() -> shooter.setPercentOutput(0.65)));
-        Buttons.button(1).onFalse(new InstantCommand(() -> shooter.setPercentOutput(0)));
-        Buttons.button(1).onFalse(new InstantCommand(() -> shooter.setPercentOutput(0)));
+        //SHOOTERS - Commented for match 1
+        //Buttons.button(2).whileTrue(subsystemCommands.aimShoot2());
+        //Buttons.button(1).onTrue(new InstantCommand(() -> shooter.setPercentOutput(0.65)));
+        //Buttons.button(1).onFalse(new InstantCommand(() -> shooter.setPercentOutput(0)));
+        //Buttons.button(1).onFalse(new InstantCommand(() -> shooter.setPercentOutput(0)));
         //Buttons.button(1).whileTrue(subsystemCommands.shootManually()); For future use
 
         //FLOOR AND FEEDERS
-        Buttons.button(12).onTrue(new InstantCommand(() -> feeder.setPercentOutput(0.35)));
-        Buttons.button(12).onFalse(new InstantCommand(() -> feeder.setPercentOutput(0)));
-        Buttons.button(11).onTrue(new InstantCommand(() -> floor.set(Speed.FEED)));
-        Buttons.button(11).onFalse(new InstantCommand(() -> floor.set(Speed.STOP)));
+        Buttons.button(1).onTrue(new InstantCommand(() -> feeder.setPercentOutput(0.60)));
+        //Consider bumping to 83
+        Buttons.button(1).onFalse(new InstantCommand(() -> feeder.setPercentOutput(0)));
+        Buttons.button(2).onTrue(new InstantCommand(() -> floor.set(Speed.FEED)));
+        Buttons.button(2).onFalse(new InstantCommand(() -> floor.set(Speed.STOP)));
       
         //INTAKE
-        Buttons.button(9).whileTrue(intake.intakeCommand());
-        Buttons.button(10).onTrue(intake.runOnce(() -> intake.set(Intake.Position.STOWED)));
+        Buttons.button(12).whileTrue(intake.intakeCommand());
+        Buttons.button(11).onTrue(intake.runOnce(() -> intake.set(Intake.Position.STOWED)));
         
+
         //DEBUGGING TOOLS
 
         //DEBUGGING ANGLE
+        /* 
         Driver1.button(5).onTrue(intake.runOnce(() -> intake.set(Intake.Position.TEST)));
         Driver1.button(6).onTrue(intake.runOnce(() -> intake.set(Intake.Position.TEST1)));
         Driver1.button(7).onTrue(intake.runOnce(() -> intake.set(Intake.Position.TEST2)));
@@ -139,16 +148,17 @@ public class RobotContainer {
         Driver1.button(12).onTrue(intake.runOnce(() -> intake.set(Intake.Position.TEST7)));
         Driver1.button(16).onTrue(new InstantCommand(() -> intake.setPivotPercentOutput(0.1)));
         Driver1.button(16).onFalse(new InstantCommand(() -> intake.setPivotPercentOutput(0)));
-        
+        */
+
         //DEBUGGING RPM
-        /*
+        
         shooter.setDefaultCommand(shooter.run(() -> 
         {
         double slider;
-        slider = (Buttons.getThrottle() + 1.0) / 2;
+        slider = (-Buttons.getThrottle() + 1.0) / 2;
         shooter.setPercentOutput(slider);
         }));
-        */
+        
 
         
 
