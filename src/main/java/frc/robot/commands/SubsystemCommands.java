@@ -100,7 +100,7 @@ public final class SubsystemCommands {
             .handleInterrupt(() -> shooter.stop());
     }
 
-    private Command feed() {
+    public Command feed() {
         return Commands.sequence(
             Commands.waitSeconds(0.25),
             Commands.parallel(

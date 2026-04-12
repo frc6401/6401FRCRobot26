@@ -5,13 +5,11 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.RPM;
 
 import java.util.Optional;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -20,13 +18,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Driving;
-import frc.robot.commands.PrepareShotCommand;
 import frc.robot.commands.ManualDriveCommand;
 import frc.robot.commands.SubsystemCommands;
-import edu.wpi.first.cscore.UsbCamera;
-import edu.wpi.first.cscore.VideoSource;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.cameraserver.CameraServer;
 import frc.robot.subsystems.Camera;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Floor;
@@ -109,10 +102,12 @@ public class RobotContainer {
       */
     private void configureBindings() {
         configureManualDriveBindings();
-        limelight.setDefaultCommand(updateVisionCommand());  
+        limelight.setDefaultCommand(updateVisionCommand());
 
+        //HOMING COMMAND
         RobotModeTriggers.autonomous().or(RobotModeTriggers.teleop())
-         .onTrue(intake.homingCommand());
+            .onTrue(intake.homingCommand());
+            
         
 
         //SHOOTERS - Commented for match 1
@@ -120,18 +115,36 @@ public class RobotContainer {
         //Buttons.button(1).onTrue(new InstantCommand(() -> shooter.setPercentOutput(0.65)));
         //Buttons.button(1).onFalse(new InstantCommand(() -> shooter.setPercentOutput(0)));
         //Buttons.button(1).onFalse(new InstantCommand(() -> shooter.setPercentOutput(0)));
-        //Buttons.button(1).whileTrue(subsystemCommands.shootManually()); For future use
+        //Buttons.button(4).whileTrue(subsystemCommands.shootManually()); 
+        Buttons.button(5).onTrue(new InstantCommand(() -> shooter.setRPM(3000)));
+        Buttons.button(5).onFalse(new InstantCommand(() -> shooter.setRPM(0)));
+        
+        // Limelight Stuff
+       // Buttons.button(7).whileTrue(subsystemCommands.aimShoot2());
+        //Buttons.button(8).whileTrue(subsystemCommands.aimAndShoot());
+
+        //Multi-system Functions Test
+       // Buttons.button(5).whileTrue(subsystemCommands.feed());
+       // Buttons.button(6).whileTrue(subsystemCommands.shootManually());
 
         //FLOOR AND FEEDERS
-        Buttons.button(1).onTrue(new InstantCommand(() -> feeder.setPercentOutput(0.60)));
+
+        //Buttons.button(1).onTrue(new InstantCommand(() -> feeder.setPercentOutput(0.83)));
         //Consider bumping to 83
-        Buttons.button(1).onFalse(new InstantCommand(() -> feeder.setPercentOutput(0)));
+        
+        Buttons.button(1).whileTrue(feeder.feedCommand());
+        Buttons.button(3).whileTrue(feeder.unloadCommand());
+        //Buttons.button(3).whileTrue(new InstantCommand(() -> feeder.setPercentOutput(-0.5)));
+        
+       // Buttons.button(1).onFalse(new InstantCommand(() -> feeder.setPercentOutput(0)));
         Buttons.button(2).onTrue(new InstantCommand(() -> floor.set(Speed.FEED)));
         Buttons.button(2).onFalse(new InstantCommand(() -> floor.set(Speed.STOP)));
       
         //INTAKE
         Buttons.button(12).whileTrue(intake.intakeCommand());
+        Buttons.button(9).whileTrue(intake.rollerCommand());
         Buttons.button(11).onTrue(intake.runOnce(() -> intake.set(Intake.Position.STOWED)));
+        
         
 
         //DEBUGGING TOOLS
@@ -151,15 +164,14 @@ public class RobotContainer {
         */
 
         //DEBUGGING RPM
-        
-        shooter.setDefaultCommand(shooter.run(() -> 
+       /*  shooter.setDefaultCommand(shooter.run(() -> 
         {
         double slider;
         slider = (-Buttons.getThrottle() + 1.0) / 2;
         shooter.setPercentOutput(slider);
         }));
         
-
+*/
         
 
 
@@ -177,13 +189,13 @@ public class RobotContainer {
         swerve.setDefaultCommand(manualDriveCommand);
 
         //HEADINGS (NEED TO BE ASSINGED A CONTROLLER)
-        Driver.povDown().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.k180deg)));
-        Driver.povRight().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.kCW_90deg)));
-        Driver.povLeft().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.kCCW_90deg)));
-        Driver.povUp().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.kZero)));
-        Driver.button(8).onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.fromDegrees(45))));
+        DriverRotate.povDown().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.k180deg)));
+        DriverRotate.povRight().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.kCW_90deg)));
+        DriverRotate.povLeft().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.kCCW_90deg)));
+        DriverRotate.povUp().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.kZero)));
+        DriverRotate.button(8).onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.fromDegrees(45))));
        
-        Driver.button(7).onTrue(Commands.runOnce(() -> manualDriveCommand.seedFieldCentric()));   
+        DriverRotate.button(1).onTrue(Commands.runOnce(() -> manualDriveCommand.seedFieldCentric()));   
     }
 
 

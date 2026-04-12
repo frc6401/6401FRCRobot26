@@ -33,6 +33,7 @@ public class PrepareShotCommand extends Command {
 
     static {
         distanceToShotMap.put(Inches.of(52.0), new Shot(2800, 0.5));
+        distanceToShotMap.put(Inches.of(90.0), new Shot(3015, 0.5));
         distanceToShotMap.put(Inches.of(114.4), new Shot(3275, 0.5));
         distanceToShotMap.put(Inches.of(165.5), new Shot(3650, 0.5));
     }
@@ -49,7 +50,7 @@ public class PrepareShotCommand extends Command {
     }
 
     public boolean isReadyToShoot() {
-        return shooter.isVelocityWithinTolerance() && hood.isPositionWithinTolerance();
+        return shooter.isVelocityWithinTolerance();
     }
 
     public Distance getDistanceToHub() {
@@ -65,6 +66,7 @@ public class PrepareShotCommand extends Command {
         shooter.setRPM(shot.shooterRPM);
         hood.setPosition(shot.hoodPosition);
         SmartDashboard.putNumber("Distance to Hub (inches)", distanceToHub.in(Inches));
+       
     }
 
     @Override

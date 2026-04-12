@@ -53,9 +53,9 @@ public class Feeder extends SubsystemBase {
             )
             .withCurrentLimits(
                 new CurrentLimitsConfigs()
-                    .withStatorCurrentLimit(Amps.of(25)) //was 120
+                    .withStatorCurrentLimit(Amps.of(19)) //was 120
                     .withStatorCurrentLimitEnable(true)
-                    .withSupplyCurrentLimit(Amps.of(25))//maybe 60-80    was 50
+                    .withSupplyCurrentLimit(Amps.of(23))//maybe 60-80    was 50
                     .withSupplyCurrentLimitEnable(true)
             )
             .withSlot0(
@@ -88,6 +88,9 @@ public class Feeder extends SubsystemBase {
         return startEnd(() -> set(Speed.FEED), () -> setPercentOutput(0));
     }
 
+    public Command unloadCommand() {
+        return startEnd(() -> setPercentOutput(-0.5), () -> setPercentOutput(0));
+    }
     @Override
     public void initSendable(SendableBuilder builder) {
         builder.addStringProperty("Command", () -> getCurrentCommand() != null ? getCurrentCommand().getName() : "null", null);

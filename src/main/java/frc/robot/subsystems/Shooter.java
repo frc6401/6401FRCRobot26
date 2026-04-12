@@ -35,7 +35,7 @@ public class Shooter extends SubsystemBase {
     private final VelocityVoltage velocityRequest = new VelocityVoltage(0).withSlot(0);
     private final VoltageOut voltageRequest = new VoltageOut(0);
 
-    private double dashboardTargetRPM = 4000; //was 0.0
+    private double dashboardTargetRPM = 3000; //was 0.0
 
     public Shooter() {
         leftMotor = new TalonFX(Ports.kShooterLeft, Ports.kCANivoreCANBus);
@@ -63,15 +63,15 @@ public class Shooter extends SubsystemBase {
             )
             .withCurrentLimits(
                 new CurrentLimitsConfigs()
-                    .withStatorCurrentLimit(Amps.of(10))
+                    .withStatorCurrentLimit(Amps.of(30))
                     .withStatorCurrentLimitEnable(true)
-                    .withSupplyCurrentLimit(Amps.of(20))
+                    .withSupplyCurrentLimit(Amps.of(15))
                     .withSupplyCurrentLimitEnable(true)
             )
             .withSlot0(
                 new Slot0Configs()
-                    .withKP(0.5)
-                    .withKI(2)
+                    .withKP(100)
+                    .withKI(0)
                     .withKD(0)
                     .withKV(12.0 / KrakenX60.kFreeSpeed.in(RotationsPerSecond)) // 12 volts when requesting max RPS
             );

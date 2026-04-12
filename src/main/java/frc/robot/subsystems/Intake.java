@@ -140,7 +140,7 @@ public class Intake extends SubsystemBase {
             )
             .withCurrentLimits(
                 new CurrentLimitsConfigs()
-                    .withStatorCurrentLimit(Amps.of(35)) //120
+                    .withStatorCurrentLimit(Amps.of(40)) //120
                     .withStatorCurrentLimitEnable(true)
                     .withSupplyCurrentLimit(Amps.of(30)) //70
                     .withSupplyCurrentLimitEnable(true)
@@ -188,6 +188,19 @@ public class Intake extends SubsystemBase {
         
     }
 
+    public Command rollerCommand()
+    {
+        return startEnd(
+            () -> {
+                set(Speed.INTAKE);
+            },
+            () -> set(Speed.STOP)
+        );
+    }
+
+  
+
+
     public Command agitateCommand() {
         return runOnce(() -> set(Speed.INTAKE))
             .andThen(
@@ -208,7 +221,7 @@ public class Intake extends SubsystemBase {
     public Command homingCommand() {
         return Commands.sequence(
             runOnce(() -> setPivotPercentOutput(0.1)),
-            Commands.waitUntil(() -> pivotMotor.getSupplyCurrent().getValue().in(Amps) > 6),
+            Commands.waitUntil(() -> pivotMotor.getSupplyCurrent().getValue().in(Amps) > 5),
             runOnce(() -> {
                 pivotMotor.setPosition(Position.HOMED.angle());
                 isHomed = true;

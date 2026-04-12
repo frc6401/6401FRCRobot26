@@ -20,11 +20,11 @@ public class Camera extends SubsystemBase {
 
         Camera = CameraServer.startAutomaticCapture(0);
         //potential fix
-        Camera.setConnectionStrategy(VideoSource.ConnectionStrategy.kKeepOpen);
+        //Camera.setConnectionStrategy(VideoSource.ConnectionStrategy.kKeepOpen);
 
 
         //Camera.setResolution(320, 240);
-        //Camera.setFPS(15);
+        //Camera.setFPS(60);
 
 
         /*
