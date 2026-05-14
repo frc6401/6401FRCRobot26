@@ -16,6 +16,7 @@ import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Ports;
 
@@ -49,7 +50,7 @@ public class Floor extends SubsystemBase {
             )
             .withCurrentLimits(
                 new CurrentLimitsConfigs()
-                    .withStatorCurrentLimit(Amps.of(23)) //was 120
+                    .withStatorCurrentLimit(Amps.of(25)) //was 120
                     .withStatorCurrentLimitEnable(true)
                     .withSupplyCurrentLimit(Amps.of(20))
                     .withSupplyCurrentLimitEnable(true)
@@ -68,6 +69,10 @@ public class Floor extends SubsystemBase {
 
     public Command feedCommand() {
         return startEnd(() -> set(Speed.FEED), () -> set(Speed.STOP));
+    }
+
+    public Command DelayedfeedCommand() {
+        return Commands.sequence(Commands.waitSeconds(2), startEnd(() -> set(Speed.FEED), () -> set(Speed.STOP)));
     }
 
     @Override

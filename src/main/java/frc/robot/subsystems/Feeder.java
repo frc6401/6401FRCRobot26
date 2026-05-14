@@ -19,13 +19,14 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.KrakenX60;
 import frc.robot.Ports;
 
 public class Feeder extends SubsystemBase {
     public enum Speed {
-        FEED(5000);
+        FEED(3000); //was 5000
         
         private final double rpm;
 
@@ -53,9 +54,9 @@ public class Feeder extends SubsystemBase {
             )
             .withCurrentLimits(
                 new CurrentLimitsConfigs()
-                    .withStatorCurrentLimit(Amps.of(19)) //was 120
+                    .withStatorCurrentLimit(Amps.of(20)) //was 120
                     .withStatorCurrentLimitEnable(true)
-                    .withSupplyCurrentLimit(Amps.of(23))//maybe 60-80    was 50
+                    .withSupplyCurrentLimit(Amps.of(20))//maybe 60-80    was 50
                     .withSupplyCurrentLimitEnable(true)
             )
             .withSlot0(
@@ -86,6 +87,11 @@ public class Feeder extends SubsystemBase {
 
     public Command feedCommand() {
         return startEnd(() -> set(Speed.FEED), () -> setPercentOutput(0));
+
+    }
+
+    public Command DelayedfeedCommand() {
+        return Commands.sequence(Commands.waitSeconds(1.25),startEnd(() -> set(Speed.FEED), () -> setPercentOutput(0)));
     }
 
     public Command unloadCommand() {
